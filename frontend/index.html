@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ON Softphone</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Boxicons -->
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- SweetAlert2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Layout wrapper -->
+    <div class="layout-wrapper layout-content-navbar">
+        <div class="layout-container">
+            <!-- Layout navbar -->
+            <nav class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme" id="layout-navbar">
+                <div class="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0 d-xl-none">
+                    <a class="nav-item nav-link px-0 me-xl-4" href="javascript:void(0)">
+                        <i class="bx bx-menu bx-sm"></i>
+                    </a>
+                </div>
+
+                <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
+                    <!-- Brand -->
+                    <div class="navbar-brand app-brand demo">
+                        <span class="app-brand-logo demo">
+                            <img src="logo.png" alt="ON Softphone" class="app-brand-logo-img">
+                        </span>
+                        <span class="app-brand-text demo menu-text fw-bold ms-2">ON Softphone</span>
+                    </div>
+
+                    <ul class="navbar-nav flex-row align-items-center ms-auto">
+                        <!-- Connection Status -->
+                        <li class="nav-item navbar-dropdown dropdown-user dropdown">
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0 me-3">
+                                    <div class="avatar avatar-online">
+                                        <span class="avatar-initial rounded-circle bg-label-success">
+                                            <i class="bx bx-wifi" id="connectionIcon"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <span class="fw-medium d-block" id="connectionStatus">Desconectado</span>
+                                    <small class="text-muted">Estado de conexión</small>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            <!-- / Layout navbar -->
+
+            <!-- Content wrapper -->
+            <div class="content-wrapper">
+                <!-- Content -->
+                <div class="container-xxl flex-grow-1 container-p-y">
+                    <!-- Navigation Pills -->
+                    <div class="nav-align-top mb-4">
+                        <ul class="nav nav-pills mb-3" role="tablist">
+                            <li class="nav-item">
+                                <button type="button" class="nav-link active" role="tab" data-bs-toggle="tab" data-bs-target="#navs-pills-dialer" aria-controls="navs-pills-dialer" aria-selected="true">
+                                    <i class="bx bx-phone me-1"></i>
+                                    Marcador
+                                </button>
+                            </li>
+                            <li class="nav-item">
+                                <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#navs-pills-contacts" aria-controls="navs-pills-contacts" aria-selected="false">
+                                    <i class="bx bx-user me-1"></i>
+                                    Contactos
+                                </button>
+                            </li>
+                            <li class="nav-item">
+                                <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#navs-pills-history" aria-controls="navs-pills-history" aria-selected="false">
+                                    <i class="bx bx-history me-1"></i>
+                                    Historial
+                                </button>
+                            </li>
+                            <li class="nav-item">
+                                <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#navs-pills-settings" aria-controls="navs-pills-settings" aria-selected="false">
+                                    <i class="bx bx-cog me-1"></i>
+                                    Configuración
+                                </button>
+                            </li>
+                        </ul>
+                        
+                        <div class="tab-content">
+                            <!-- Dialer Tab -->
+                            <div class="tab-pane fade show active" id="navs-pills-dialer" role="tabpanel">
+                                <div class="row justify-content-center">
+                                    <div class="col-lg-4 col-md-6">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <!-- Phone Number Input -->
+                                                <div class="mb-4">
+                                                    <div class="input-group input-group-lg">
+                                                        <span class="input-group-text">+</span>
+                                                        <input type="tel" class="form-control" id="phoneNumber" placeholder="Ingrese número de teléfono" maxlength="20">
+                                                        <button class="btn btn-outline-secondary" type="button" id="clearNumberButton">
+                                                            <i class="bx bx-x"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Dialpad -->
+                                                <div class="dialpad-container" id="dialpadContainer">
+                                                    <div class="row g-2" id="dialpadGrid">
+                                                        <div class="col-4">
+                                                            <button class="btn btn-outline-primary dialpad-btn w-100" data-digit="1">
+                                                                <div class="d-flex flex-column align-items-center">
+                                                                    <span class="fs-4 fw-bold">1</span>
+                                                                </div>
+                                                            </button>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <button class="btn btn-outline-primary dialpad-btn w-100" data-digit="2">
+                                                                <div class="d-flex flex-column align-items-center">
+                                                                    <span class="fs-4 fw-bold">2</span>
+                                                                    <small class="text-muted">ABC</small>
+                                                                </div>
+                                                            </button>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <button class="btn btn-outline-primary dialpad-btn w-100" data-digit="3">
+                                                                <div class="d-flex flex-column align-items-center">
+                                                                    <span class="fs-4 fw-bold">3</span>
+                                                                    <small class="text-muted">DEF</small>
+                                                                </div>
+                                                            </button>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <button class="btn btn-outline-primary dialpad-btn w-100" data-digit="4">
+                                                                <div class="d-flex flex-column align-items-center">
+                                                                    <span class="fs-4 fw-bold">4</span>
+                                                                    <small class="text-muted">GHI</small>
+                                                                </div>
+                                                            </button>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <button class="btn btn-outline-primary dialpad-btn w-100" data-digit="5">
+                                                                <div class="d-flex flex-column align-items-center">
+                                                                    <span class="fs-4 fw-bold">5</span>
+                                                                    <small class="text-muted">JKL</small>
+                                                                </div>
+                                                            </button>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <button class="btn btn-outline-primary dialpad-btn w-100" data-digit="6">
+                                                                <div class="d-flex flex-column align-items-center">
+                                                                    <span class="fs-4 fw-bold">6</span>
+                                                                    <small class="text-muted">MNO</small>
+                                                                </div>
+                                                            </button>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <button class="btn btn-outline-primary dialpad-btn w-100" data-digit="7">
+                                                                <div class="d-flex flex-column align-items-center">
+                                                                    <span class="fs-4 fw-bold">7</span>
+                                                                    <small class="text-muted">PQRS</small>
+                                                                </div>
+                                                            </button>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <button class="btn btn-outline-primary dialpad-btn w-100" data-digit="8">
+                                                                <div class="d-flex flex-column align-items-center">
+                                                                    <span class="fs-4 fw-bold">8</span>
+                                                                    <small class="text-muted">TUV</small>
+                                                                </div>
+                                                            </button>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <button class="btn btn-outline-primary dialpad-btn w-100" data-digit="9">
+                                                                <div class="d-flex flex-column align-items-center">
+                                                                    <span class="fs-4 fw-bold">9</span>
+                                                                    <small class="text-muted">WXYZ</small>
+                                                                </div>
+                                                            </button>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <button class="btn btn-outline-primary dialpad-btn w-100" data-digit="*">
+                                                                <div class="d-flex flex-column align-items-center">
+                                                                    <span class="fs-4 fw-bold">*</span>
+                                                                </div>
+                                                            </button>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <button class="btn btn-outline-primary dialpad-btn w-100" data-digit="0">
+                                                                <div class="d-flex flex-column align-items-center">
+                                                                    <span class="fs-4 fw-bold">0</span>
+                                                                    
+                                                                </div>
+                                                            </button>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <button class="btn btn-outline-primary dialpad-btn w-100" data-digit="#">
+                                                                <div class="d-flex flex-column align-items-center">
+                                                                    <span class="fs-4 fw-bold">#</span>
+                                                                </div>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Call Button -->
+                                                <div class="d-grid gap-2 mt-4">
+                                                    <button class="btn btn-success btn-lg" id="callButton">
+                                                        <i class="bx bx-phone-call me-2"></i>
+                                                        Realizar Llamada
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Recent Calls -->
+                                        <div class="card mt-4">
+                                            <div class="card-header">
+                                                <h5 class="card-title mb-0">
+                                                    <i class="bx bx-time me-2"></i>
+                                                    Llamadas Recientes
+                                                </h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <div id="recentCallsList">
+                                                    <div class="text-center text-muted py-3">
+                                                        <i class="bx bx-phone bx-lg mb-2"></i>
+                                                        <p class="mb-0">No hay llamadas recientes</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Contacts Tab -->
+                            <div class="tab-pane fade" id="navs-pills-contacts" role="tabpanel">
+                                <div class="row">
+                                    <div class="col-lg-8">
+                                        <div class="card">
+                                            <div class="card-header d-flex justify-content-between align-items-center">
+                                                <h5 class="card-title mb-0">
+                                                    <i class="bx bx-user me-2"></i>
+                                                    Contactos
+                                                </h5>
+                                                <button class="btn btn-primary" id="addContactBtn">
+                                                    <i class="bx bx-plus me-1"></i>
+                                                    Agregar
+                                                </button>
+                                            </div>
+                                            <div class="card-body">
+                                                <!-- Search -->
+                                                <div class="mb-3">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text">
+                                                            <i class="bx bx-search"></i>
+                                                        </span>
+                                                        <input type="text" class="form-control" id="contactSearch" placeholder="Buscar contactos...">
+                                                    </div>
+                                                </div>
+                                                
+                                                <!-- Contacts List -->
+                                                <div id="contactsList">
+                                                    <div class="text-center text-muted py-4">
+                                                        <i class="bx bx-user-plus bx-lg mb-2"></i>
+                                                        <p class="mb-0">No hay contactos guardados</p>
+                                                        <small>Agregue contactos para acceso rápido</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Formulario de contacto obsoleto eliminado para evitar conflictos de IDs -->
+                                </div>
+                            </div>
+
+                            <!-- History Tab -->
+                            <div class="tab-pane fade" id="navs-pills-history" role="tabpanel">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5 class="card-title mb-0">
+                                            <i class="bx bx-history me-2"></i>
+                                            Historial de Llamadas
+                                        </h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div id="callHistory">
+                                            <div class="text-center text-muted py-4">
+                                                <i class="bx bx-phone bx-lg mb-2"></i>
+                                                <p class="mb-0">No hay historial de llamadas</p>
+                                                <small>Las llamadas realizadas aparecerán aquí</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Settings Tab -->
+                            <div class="tab-pane fade" id="navs-pills-settings" role="tabpanel">
+                                <div class="row">
+                                    <!-- Twilio Credentials -->
+                                    <div class="col-lg-6">
+                                        <div class="card mb-4">
+                                            <div class="card-header">
+                                                <h6 class="card-title mb-0">
+                                                    <i class="bx bx-key me-2"></i>
+                                                    Credenciales de Twilio
+                                                </h6>
+                                            </div>
+                                            <div class="card-body">
+                                                <form id="credentials-form">
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                <label for="accountSid" class="form-label">Account SID</label>
+                                                                <input type="text" class="form-control" id="accountSid" placeholder="ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                <label for="authToken" class="form-label">Auth Token</label>
+                                                                <input type="password" class="form-control" id="authToken" placeholder="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                <label for="apiKeySid" class="form-label">API Key SID</label>
+                                                                <input type="text" class="form-control" id="apiKeySid" placeholder="SKxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                <label for="apiKeySecret" class="form-label">API Key Secret</label>
+                                                                <input type="password" class="form-control" id="apiKeySecret" placeholder="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                <label for="twimlAppSid" class="form-label">TwiML App SID</label>
+                                                                <input type="text" class="form-control" id="twimlAppSid" placeholder="APxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                <label for="identity" class="form-label">Identity (Usuario)</label>
+                                                                <input type="text" class="form-control" id="identity" placeholder="usuario_ejemplo">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="twilioPhoneNumber" class="form-label">Número de Teléfono Twilio</label>
+                                                        <input type="tel" class="form-control" id="twilioPhoneNumber" placeholder="+1234567890">
+                                                    </div>
+                                                    
+                                                    <!-- Connection Toggle -->
+                                                    <div class="mb-3">
+                                                        <div class="form-check form-switch">
+                                                            <input class="form-check-input" type="checkbox" id="connectionToggle">
+                                                            <label class="form-check-label" for="connectionToggle">
+                                                                <span id="toggleLabel">Conectar</span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="d-flex gap-2">
+                                                        <button type="button" class="btn btn-primary" id="saveCredentialsBtn">
+                                                            <i class="bx bx-save me-1"></i>
+                                                            Guardar
+                                                        </button>
+                                                        <button type="button" class="btn btn-outline-danger" id="clearCredentialsBtn">
+                                                            <i class="bx bx-trash me-1"></i>
+                                                            Limpiar
+                                                        </button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Connection Status & Audio Settings -->
+                                    <div class="col-lg-6">
+                                        <!-- Connection Status -->
+                                        <div class="card mb-4">
+                                            <div class="card-header">
+                                                <h6 class="card-title mb-0">
+                                                    <i class="bx bx-wifi me-2"></i>
+                                                    Estado de la Conexión
+                                                </h6>
+                                            </div>
+                                            <div class="card-body">
+                                                <div id="statusMessage">
+                                                    <div class="alert alert-info" role="alert">
+                                                        <i class="bx bx-info-circle me-2"></i>
+                                                        Ingrese sus credenciales de Twilio para comenzar.
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Audio Settings -->
+                                        <div class="card mb-4">
+                                            <div class="card-header">
+                                                <h6 class="card-title mb-0">
+                                                    <i class="bx bx-volume-full me-2"></i>
+                                                    Configuración de Audio
+                                                </h6>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="mb-3">
+                                                    <label for="microphoneSelect" class="form-label">Micrófono</label>
+                                                    <select class="form-select" id="microphoneSelect">
+                                                        <option value="">Seleccionar micrófono...</option>
+                                                    </select>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="speakerSelect" class="form-label">Altavoz</label>
+                                                    <select class="form-select" id="speakerSelect">
+                                                        <option value="">Seleccionar altavoz...</option>
+                                                    </select>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="volumeControl" class="form-label">Volumen: <span id="volumeValue" class="badge bg-primary">50</span>%</label>
+                                                    <input type="range" class="form-range" id="volumeControl" min="0" max="100" value="50">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Contact Management -->
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h6 class="card-title mb-0">
+                                                    <i class="bx bx-import me-2"></i>
+                                                    Gestión de Contactos
+                                                </h6>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="d-grid gap-2">
+                                                    <button class="btn btn-outline-primary" id="exportContactsBtn">
+                                                        <i class="bx bx-download me-1"></i>
+                                                        Exportar Contactos
+                                                    </button>
+                                                    <input type="file" id="importContactsFile" accept=".json" style="display: none;">
+                                                    <button class="btn btn-outline-secondary" id="importContactsBtn">
+                                                        <i class="bx bx-upload me-1"></i>
+                                                        Importar Contactos
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- / Content -->
+            </div>
+            <!-- / Content wrapper -->
+        </div>
+        <!-- / Layout container -->
+    </div>
+    <!-- / Layout wrapper -->
+
+    <!-- Call Overlay -->
+    <div class="call-overlay d-none" id="callOverlay">
+        <div class="call-overlay-content">
+            <div class="text-center mb-4">
+                <div class="avatar avatar-xl mb-3">
+                    <span class="avatar-initial rounded-circle bg-label-primary">
+                        <i class="bx bx-phone bx-lg"></i>
+                    </span>
+                </div>
+                <div class="call-info" id="callInfo">
+                    <h5 class="mb-1" id="callNumber">+1234567890</h5>
+                    <p class="call-status mb-2" id="callStatus">Conectando...</p>
+                    <div class="call-timer" id="callTimer">
+                        <span id="timerDisplay">00:00</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="call-controls d-flex justify-content-center gap-3">
+                <button class="btn btn-outline-light" id="muteButton" title="Silenciar">
+                    <i class="bx bx-microphone"></i>
+                </button>
+                <button class="btn btn-outline-light" id="holdButton" title="Retener">
+                    <i class="bx bx-pause"></i>
+                </button>
+                <button class="btn btn-danger" id="hangupButton" title="Colgar">
+                    <i class="bx bx-phone-off"></i>
+                </button>
+                <button class="btn btn-outline-light" id="speakerButton" title="Altavoz">
+                    <i class="bx bx-volume-full"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Call Control Modal -->
+    <div class="modal fade" id="callControlModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header border-0 pb-20">
+                    <div class="w-100 text-center">
+                        <div class="avatar avatar-xl mb-2">
+                            <span class="avatar-initial rounded-circle bg-label-primary">
+                                <i class="bx bx-phone bx-lg"></i>
+                            </span>
+                        </div>
+                        <h5 class="modal-title mb-1" id="callControlTitle">En llamada</h5>
+                        <p class="text-muted mb-0" id="callControlNumber">+1234567890</p>
+                        <div class="mt-2">
+                            <span class="badge bg-success" id="callDuration">00:00</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="modal-body pt-2">
+                    <!-- Call Controls -->
+                    <div class="row justify-content-center mb-4">
+                        <div class="col-auto">
+                            <div class="d-flex gap-3 justify-content-center">
+                                <!-- Mute Button -->
+                                <button class="btn btn-outline-secondary btn-lg rounded-circle" id="muteButton" title="Silenciar">
+                                    <i class="bx bx-microphone bx-md"></i>
+                                </button>
+                                
+                                <!-- Hold Button -->
+                                <button class="btn btn-outline-warning btn-lg rounded-circle" id="holdButton" title="Retener">
+                                    <i class="bx bx-pause bx-md"></i>
+                                </button>
+                                
+                                <!-- Hangup Button -->
+                                <button class="btn btn-danger btn-lg rounded-circle" id="hangupButton" title="Colgar">
+                                    <i class="bx bx-phone-off bx-md"></i>
+                                </button>
+                                
+                                <!-- Speaker Button -->
+                                <button class="btn btn-outline-info btn-lg rounded-circle" id="speakerButton" title="Altavoz">
+                                    <i class="bx bx-volume-full bx-md"></i>
+                                </button>
+                                
+                                <!-- Keypad Toggle -->
+                                <button class="btn btn-outline-primary btn-lg rounded-circle" id="keypadToggle" title="Teclado">
+                                    <i class="bx bx-dialpad bx-md"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Dialpad (Hidden by default) -->
+                    <div class="row justify-content-center" id="callDialpad" style="display: none;">
+                        <div class="col-8">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="mb-3">
+                                        <input type="text" class="form-control form-control-lg text-center" id="dtmfInput" placeholder="Ingrese dígitos" readonly>
+                                    </div>
+                                    
+                                    <div class="row g-2" id="callDialpadGrid">
+                                        <div class="col-4">
+                                            <button class="btn btn-outline-primary dialpad-btn w-100" data-dtmf="1">
+                                                <div class="d-flex flex-column align-items-center">
+                                                    <span class="fs-5 fw-bold">1</span>
+                                                </div>
+                                            </button>
+                                        </div>
+                                        <div class="col-4">
+                                            <button class="btn btn-outline-primary dialpad-btn w-100" data-dtmf="2">
+                                                <div class="d-flex flex-column align-items-center">
+                                                    <span class="fs-5 fw-bold">2</span>
+                                                    <small class="text-muted">ABC</small>
+                                                </div>
+                                            </button>
+                                        </div>
+                                        <div class="col-4">
+                                            <button class="btn btn-outline-primary dialpad-btn w-100" data-dtmf="3">
+                                                <div class="d-flex flex-column align-items-center">
+                                                    <span class="fs-5 fw-bold">3</span>
+                                                    <small class="text-muted">DEF</small>
+                                                </div>
+                                            </button>
+                                        </div>
+                                        <div class="col-4">
+                                            <button class="btn btn-outline-primary dialpad-btn w-100" data-dtmf="4">
+                                                <div class="d-flex flex-column align-items-center">
+                                                    <span class="fs-5 fw-bold">4</span>
+                                                    <small class="text-muted">GHI</small>
+                                                </div>
+                                            </button>
+                                        </div>
+                                        <div class="col-4">
+                                            <button class="btn btn-outline-primary dialpad-btn w-100" data-dtmf="5">
+                                                <div class="d-flex flex-column align-items-center">
+                                                    <span class="fs-5 fw-bold">5</span>
+                                                    <small class="text-muted">JKL</small>
+                                                </div>
+                                            </button>
+                                        </div>
+                                        <div class="col-4">
+                                            <button class="btn btn-outline-primary dialpad-btn w-100" data-dtmf="6">
+                                                <div class="d-flex flex-column align-items-center">
+                                                    <span class="fs-5 fw-bold">6</span>
+                                                    <small class="text-muted">MNO</small>
+                                                </div>
+                                            </button>
+                                        </div>
+                                        <div class="col-4">
+                                            <button class="btn btn-outline-primary dialpad-btn w-100" data-dtmf="7">
+                                                <div class="d-flex flex-column align-items-center">
+                                                    <span class="fs-5 fw-bold">7</span>
+                                                    <small class="text-muted">PQRS</small>
+                                                </div>
+                                            </button>
+                                        </div>
+                                        <div class="col-4">
+                                            <button class="btn btn-outline-primary dialpad-btn w-100" data-dtmf="8">
+                                                <div class="d-flex flex-column align-items-center">
+                                                    <span class="fs-5 fw-bold">8</span>
+                                                    <small class="text-muted">TUV</small>
+                                                </div>
+                                            </button>
+                                        </div>
+                                        <div class="col-4">
+                                            <button class="btn btn-outline-primary dialpad-btn w-100" data-dtmf="9">
+                                                <div class="d-flex flex-column align-items-center">
+                                                    <span class="fs-5 fw-bold">9</span>
+                                                    <small class="text-muted">WXYZ</small>
+                                                </div>
+                                            </button>
+                                        </div>
+                                        <div class="col-4">
+                                            <button class="btn btn-outline-primary dialpad-btn w-100" data-dtmf="*">
+                                                <div class="d-flex flex-column align-items-center">
+                                                    <span class="fs-5 fw-bold">*</span>
+                                                </div>
+                                            </button>
+                                        </div>
+                                        <div class="col-4">
+                                            <button class="btn btn-outline-primary dialpad-btn w-100" data-dtmf="0">
+                                                <div class="d-flex flex-column align-items-center">
+                                                    <span class="fs-5 fw-bold">0</span>
+                                                    <small class="text-muted">+</small>
+                                                </div>
+                                            </button>
+                                        </div>
+                                        <div class="col-4">
+                                            <button class="btn btn-outline-primary dialpad-btn w-100" data-dtmf="#">
+                                                <div class="d-flex flex-column align-items-center">
+                                                    <span class="fs-5 fw-bold">#</span>
+                                                </div>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="d-grid gap-2 mt-3">
+                                        <button class="btn btn-outline-secondary" id="clearDtmfButton">
+                                            <i class="bx bx-x me-2"></i>
+                                            Limpiar Display
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Incoming Call Modal -->
+    <div class="modal fade" id="incomingCallModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body text-center py-4">
+                    <div class="mb-3">
+                        <div class="avatar avatar-xl mb-3">
+                            <span class="avatar-initial rounded-circle bg-label-success">
+                                <i class="bx bx-phone-incoming bx-lg"></i>
+                            </span>
+                        </div>
+                        <h5 class="mb-1">Llamada Entrante</h5>
+                        <p class="text-muted mb-0" id="incomingNumber">+1234567890</p>
+                    </div>
+                    
+                    <div class="d-flex justify-content-center gap-3">
+                        <button class="btn btn-success btn-lg" id="acceptCallButton">
+                            <i class="bx bx-phone"></i>
+                        </button>
+                        <button class="btn btn-danger btn-lg" id="rejectCallButton">
+                            <i class="bx bx-phone-off"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact Modal -->
+    <div class="modal fade" id="contactModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="contactModalTitle">
+                        <i class="bx bx-user-plus me-2"></i>
+                        Agregar Contacto
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="contactForm">
+                        <div class="mb-3">
+                            <label for="contactName" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="contactName" placeholder="Ingrese el nombre" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="contactPhone" class="form-label">Teléfono</label>
+                            <input type="tel" class="form-control" id="contactPhone" placeholder="+1234567890" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="contactEmail" class="form-label">Email (opcional)</label>
+                            <input type="email" class="form-control" id="contactEmail" placeholder="email@ejemplo.com">
+                        </div>
+                        <div class="mb-3">
+                            <label for="contactCompany" class="form-label">Empresa (opcional)</label>
+                            <input type="text" class="form-control" id="contactCompany" placeholder="Nombre de la empresa">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="saveContactBtn">
+                        <i class="bx bx-save me-1"></i>
+                        Guardar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Screen -->
+    <div class="loading-overlay" id="loadingScreen" style="display: none;">
+        <div class="loading-content">
+            <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+                <span class="visually-hidden">Cargando...</span>
+            </div>
+            <div class="mt-3">
+                <h5 class="text-white">Iniciando llamada...</h5>
+                <p class="text-white-50 mb-0">Por favor espere</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container position-fixed top-0 end-0 p-3" id="toastContainer"></div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="js/twilio.min.js"></script>
+    <script src="js/credentials.js"></script>
+    <script src="js/phone.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
